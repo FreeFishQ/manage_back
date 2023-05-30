@@ -6,8 +6,7 @@ import com.fish.manage_back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -25,7 +24,7 @@ public class UserController {
     }
 //    查询所有数据
     @GetMapping
-    public List<User> index(){
+    public List<User> findAll(){
         List<User> list;
         list =userMapper.selectAllUser();
         return list;
@@ -34,5 +33,18 @@ public class UserController {
     @DeleteMapping("/{id}")
     private Integer delete(@PathVariable Integer id){
         return userMapper.deleteById(id);
+    }
+
+    @GetMapping("/page")//分页查询
+    public Map<String,Object> findByPage(@RequestParam Integer pageNum,@RequestParam Integer pageSize,
+                                         @RequestParam String username){
+        pageNum=(pageNum-1)*pageSize;
+        username="%"+username+"%";
+        List<User> list = userMapper.selectPage(pageNum, pageSize,username);
+        Integer total = userMapper.selectTotal(username);
+        Map<String, Object> res=new HashMap<>();
+        res.put("data",list);
+        res.put("total",total);
+        return res;
     }
 }

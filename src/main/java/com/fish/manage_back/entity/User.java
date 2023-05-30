@@ -1,8 +1,6 @@
 package com.fish.manage_back.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 @Data
@@ -14,6 +12,7 @@ public class User {
     private String email;
     private String phone;
     private String address;
+
 
 
 }

@@ -23,6 +23,7 @@ public class UserController {
     @PostMapping
     public boolean save(@RequestBody User user){
 //       return userMapper.insert(user);
+
         return userService.saveUser(user);
     }
 //    查询所有数据
@@ -40,6 +41,11 @@ public class UserController {
         return userService.removeById(id);
     }
 
+    @PostMapping("/del/batch")
+    private boolean deleteBatch(@RequestBody List<Integer> ids){
+//        return userMapper.deleteById(id);
+        return userService.removeBatchByIds(ids);
+    }
 
 //    @GetMapping("/page")//分页查询
 //    public Map<String,Object> findByPage(@RequestParam Integer pageNum,@RequestParam Integer pageSize,
@@ -57,20 +63,20 @@ public class UserController {
     @GetMapping("/page")//分页查询
     public IPage<User> findByPage(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
                                   @RequestParam String username,
-                                  @RequestParam(defaultValue = "") String nickname,
+                                  @RequestParam(defaultValue = "") String email,
                                   @RequestParam(defaultValue = "") String address){
         IPage<User> page=new Page<>(pageNum,pageSize);
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         if (!"".equals(username)){
             userQueryWrapper.like("username",username);
         }
-        if (!"".equals(nickname)){
-            userQueryWrapper.like("nickname",nickname);
+        if (!"".equals(email)){
+            userQueryWrapper.like("email",email);
         }
         if (!"".equals(address)){
             userQueryWrapper.like("address",address);
         }
-
+        userQueryWrapper.orderByDesc("id");
 
         return userService.page(page,userQueryWrapper);
     }
